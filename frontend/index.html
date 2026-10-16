@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Presenter performance assessment from uploaded videos" />
+  <title>Presenter Performance Studio</title>
+  <link rel="stylesheet" href="/assets/styles.css?v=11" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Presenter Performance Grader home">
+        <span class="brand-mark" aria-hidden="true">P</span>
+        <span><strong>Presenter</strong><small>Performance Studio</small></span>
+      </a>
+      <div class="topbar-meta"><span class="live-dot"></span><span id="serviceStatus">Connecting</span></div>
+    </header>
+
+    <main>
+      <section class="intro" id="introSection">
+        <div>
+          <p class="kicker">Communication assessment workspace</p>
+          <h1>Turn a presentation into a <em>clearer performance plan.</em></h1>
+          <p class="intro-copy">A presenter-focused review of message structure, delivery, articulation, vocal engagement, and technical readiness.</p>
+        </div>
+        <div class="rubric-summary"><span>Presenter rubric</span><strong>Evidence-led scoring</strong><small>Missing signals are excluded; TED-style structure cues are coaching only.</small></div>
+      </section>
+
+      <section class="workspace" id="workspaceSection">
+        <aside class="control-panel" id="uploadPanel">
+          <div class="panel-label">01 / Create review</div>
+          <h2>Assess your video</h2>
+          <form id="uploadForm">
+            <label class="field-label" for="speakerName">Presenter name</label>
+            <input id="speakerName" type="text" value="Speaker" autocomplete="name" />
+
+            <label class="field-label" for="videoInput">Video files</label>
+            <label class="dropzone" for="videoInput">
+              <span class="drop-icon">+</span>
+              <strong>Choose one or more videos</strong>
+              <small>MP4, MOV, AVI, MKV</small>
+              <input id="videoInput" type="file" accept="video/*" multiple />
+            </label>
+            <div class="file-count" id="fileCount">No videos selected</div>
+
+            <label class="field-label" for="scriptInput">Optional reference script</label>
+            <textarea id="scriptInput" rows="4" placeholder="Paste the intended message to measure alignment..."></textarea>
+            <button class="primary-button" id="analyzeButton" type="submit"><span>Analyze performance</span><b>→</b></button>
+          </form>
+          <div class="privacy-note"><span>●</span> Local analysis. Your videos are processed temporarily and removed after grading.</div>
+        </aside>
+
+        <section class="report-panel">
+          <div class="report-header"><div><div class="panel-label">02 / Performance report</div><h2 id="reportTitle">Your report appears here</h2></div><div class="report-actions"><span class="report-status" id="reportStatus">Awaiting video</span><button class="download-button" id="downloadReportButton" type="button" disabled>Download report</button></div></div>
+          <div class="empty-state" id="emptyState"><div class="empty-orbit">◎</div><h3>Ready when you are</h3><p>Upload a presentation to generate a weighted presenter report.</p></div>
+          <div id="resultsPanel" class="hidden">
+            <section class="comparison-panel" id="comparisonPanel">
+              <div class="comparison-heading"><div><span class="metric-caption">Batch comparison</span><h3>Ranked by overall performance</h3></div><span id="comparisonSummary">0 videos</span></div>
+              <div class="comparison-scroll">
+                <table class="comparison-table">
+                  <thead><tr><th>Rank</th><th>Video</th><th>Overall</th><th>Grade</th><th>Content</th><th>Delivery</th><th>Vocal control</th><th>Video quality</th></tr></thead>
+                  <tbody id="comparisonBody"></tbody>
+                </table>
+              </div>
+            </section>
+            <div class="score-hero">
+              <div><span class="metric-caption">Overall performance</span><div class="score-line"><strong id="overallScore">0</strong><span>/100</span></div><span class="grade-tag" id="gradeBadge">Not rated</span></div>
+              <div class="score-context"><span id="statusValue">Awaiting analysis</span><small>Weighted presenter rubric</small><small id="evidenceCoverage">Evidence coverage: —</small></div>
+            </div>
+            <section class="grading-ledger">
+              <div><span class="metric-caption">Assessment ledger</span><h3>All grading modules and score inputs</h3></div>
+              <div class="ledger-scroll"><table class="ledger-table"><thead><tr><th>Module / metric</th><th>Status</th><th>Score</th><th>Weight</th><th>Reason</th></tr></thead><tbody id="gradingLedgerBody"></tbody></table></div>
+              <p class="coverage-note" id="coverageNote">Only modules with reliable evidence contribute to the overall score.</p>
+            </section>
+            <div class="rubric-grid" id="rubricGrid"></div>
+            <section class="talk-coach" aria-labelledby="talkCoachTitle">
+              <div class="talk-coach-heading">
+                <div><span class="metric-caption">TED-style talk coach</span><h3 id="talkCoachTitle">Shape a talk people remember</h3><p>Structure cues from the transcript; coaching only, never part of your grade.</p></div>
+                <strong class="talk-coach-progress" id="talkCoachProgress">Transcript needed</strong>
+              </div>
+              <ol class="talk-coach-list" id="talkCoachList"></ol>
+              <p class="talk-coach-note" id="talkCoachNote">A transcript is needed for talk-structure suggestions.</p>
+            </section>
+            <div class="report-grid">
+              <article class="report-card"><span class="metric-caption">Delivery signals</span><div class="signal-list"><div><strong id="wpmValue">0</strong><span>Words / minute</span></div><div><strong id="fillerValue">0</strong><span>Filler words</span></div><div><strong id="pauseValue">0s</strong><span>Pause time</span></div><div><strong id="pitchValue">0</strong><span>Pitch variation</span></div><div><strong id="speechRatioValue">0%</strong><span>Speech activity</span></div></div></article>
+              <article class="report-card"><span class="metric-caption">Message quality</span><div class="content-status" id="contentStatus">Transcript unavailable</div><div class="message-stats"><span><b id="contentWords">0</b>words</span><span><b id="contentSentences">0</b>sentences</span><span><b id="contentVocabulary">0%</b>vocabulary variety</span></div><p id="contentFeedback">Content feedback will appear after analysis.</p></article>
+              <article class="report-card"><span class="metric-caption">Eye-line signal (proxy)</span><div class="content-status" id="readingStatus">Insufficient camera evidence</div><div class="message-stats"><span><b id="readingLikelihood">0%</b>reading likelihood</span><span><b id="readingConfidence">0%</b>confidence</span></div><p id="readingFeedback">Eye-line analysis is a proxy only; it cannot prove whether a presenter is reading.</p></article>
+              <article class="report-card"><span class="metric-caption">Facial movement (proxy)</span><div class="content-status" id="expressionStatus">Not enough face samples</div><div class="message-stats"><span><b id="expressionScore">—</b>expression variation</span><span><b id="expressionSamples">0</b>face samples</span></div><p id="expressionNote">This measures visible movement patterns only. It cannot tell whether someone is motivated, confident, or feeling a particular emotion.</p></article>
+            </div>
+            <article class="recommendation-card"><div><span class="metric-caption">Coach's next steps</span><h3>Make the next take stronger</h3></div><ul id="recommendationList"></ul></article>
+            <article class="feedback-card" id="feedbackPanel">
+              <div><span class="metric-caption">Improve the assessment</span><h3>Was this feedback useful?</h3><p>Rate the report and tell us what would make it more helpful.</p></div>
+              <form id="feedbackForm">
+                <div class="rating" role="radiogroup" aria-label="Feedback rating">
+                  <label><input type="radio" name="rating" value="1"><span>1</span></label>
+                  <label><input type="radio" name="rating" value="2"><span>2</span></label>
+                  <label><input type="radio" name="rating" value="3" checked><span>3</span></label>
+                  <label><input type="radio" name="rating" value="4"><span>4</span></label>
+                  <label><input type="radio" name="rating" value="5"><span>5</span></label>
+                </div>
+                <textarea id="feedbackComment" rows="3" placeholder="What should the report explain better?"></textarea>
+                <button class="feedback-button" type="submit">Send feedback</button>
+                <div class="feedback-message" id="feedbackMessage" role="status"></div>
+              </form>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button class="mobile-nav-item is-active" type="button" data-target="introSection">Home</button>
+      <button class="mobile-nav-item" type="button" data-target="uploadPanel">Upload</button>
+      <button class="mobile-nav-item" type="button" data-target="resultsPanel">Report</button>
+      <button class="mobile-nav-item" type="button" data-target="feedbackPanel">Feedback</button>
+    </nav>
+  </div>
+  <script src="/assets/app.js?v=11" defer></script>
+</body>
+</html>
